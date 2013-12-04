@@ -1,4 +1,6 @@
--- IRC test thingy
+-- IRC Backend
+
+local provider = "SomeIRCGateway.com"
 local socket = require "socket"
 local IRCSocket = nil
 local lastPing = os.time()
@@ -60,8 +62,8 @@ function handleInput(r, s, usr)
                 r:wswrite("PART " .. params)
                 s:send("PART " .. params .. "\r\n")
             elseif cmd == "QUIT" then
-                r:wswrite("QUIT :IRCGateway with websockets and stuff! :o")
-                s:send("QUIT :IRCGateway.com\r\n")
+                r:wswrite(("QUIT :%s"):format(provider))
+                s:send(("QUIT :%s\r\n"):format(provider))
                 s:close()
                 IRCSocket = nil
                 return false
@@ -164,15 +166,6 @@ function handle(r)
         IRCSocket = s
         s:settimeout(0.25)
         local b = 0
-        math.randomseed(os.time())
-        local okay = s:bind('46.4.102.180', math.random(1050,63000))
-        while not okay do
-            okay = s:bind('46.4.102.180', math.random(1050,63000))
-            b = b + 1
-            if b > 10 then
-                break
-            end
-        end
         
         -- Connect to IRC
         r:wswrite(("NOTICE Connecting to %s (port %d)..."):format(server, port))
@@ -201,7 +194,7 @@ function handle(r)
             IRCSocket:send("QUIT :Page closed.\r\n\r\n")
             IRCSocket:close()
         end
-        r:wswrite("NOTICE Thanks for using IRCGateway.com!")
+        r:wswrite(("NOTICE Thanks for using %s!"):format(provider))
         
         r:wsclose()
     else
