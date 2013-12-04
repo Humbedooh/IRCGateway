@@ -260,7 +260,7 @@
 
 <script language="javascript" type="text/javascript">
 
-  var wsUri = "ws://www.example.com/irc.lua"; // Enter your WS URI here
+  var wsUri = "ws://www.example.com/irc.lua"; // EDIT THIS!
   var output;
   var pInput = "";
   var bSent = 0;
@@ -276,7 +276,7 @@
   var online = false;
   var username = "NoSuchUserNameYet";
   
-  Date.prototype.format = function(format)
+  Date.prototype.format = function(format) //author: meizz
 {
   var o = {
     "M+" : this.getMonth()+1, //month
@@ -341,8 +341,8 @@ function noCaseSort(a, b) {
         if (!found) {
             channels.push({'name': channel, 'type': 1})
         }
-        if (!channelLines[channel]) {
-            channelLines[channel] = new Array();
+        if (!channelLines[channel.toLowerCase()]) {
+            channelLines[channel.toLowerCase()] = new Array();
         }
         
         // Update channels list
@@ -363,10 +363,10 @@ function noCaseSort(a, b) {
     var userlist = document.createElement('ul');
     
         
-    if (channel && channels.length > 0 && channelUsers[channel]) {
-        channelUsers[channel].sort(noCaseSort);
-        for (i in channelUsers[channel]) {
-            var l = channelUsers[channel][i];
+    if (channel && channels.length > 0 && channelUsers[channel.toLowerCase()]) {
+        channelUsers[channel.toLowerCase()].sort(noCaseSort);
+        for (i in channelUsers[channel.toLowerCase()]) {
+            var l = channelUsers[channel.toLowerCase()][i];
             var el = document.createElement('li');
             el.innerHTML = l.name;
             el.className = "user_normal";
@@ -383,7 +383,7 @@ function noCaseSort(a, b) {
     }
     if (channel) {
         var caption = document.getElementById('caption');
-        var topic = topics[channel] ? topics[channel] : "No topic set";
+        var topic = topics[channel] ? topics[channel.toLowerCase()] : "No topic set";
         if (channel.match(/^#/)) {
             caption.innerHTML = "<h4>Speaking in " + channel + ": " + topic + "</h4>";
         }
@@ -395,8 +395,8 @@ function noCaseSort(a, b) {
     
     channels.sort(noCaseSort);
     for (chan in channels) {
-        if (!channelPings[channels[chan]]) {
-            channelPings[channels[chan]] = 0;
+        if (!channelPings[channels[chan].name.toLowerCase()]) {
+            channelPings[channels[chan].name.toLowerCase()] = 0;
         }
         var l = channels[chan];
         var el = document.createElement('li');
@@ -429,8 +429,8 @@ function noCaseSort(a, b) {
     if (!noUpdate) {
         var html = document.getElementById('messages');
         html.innerHTML = "";
-        if (channelLines[channel]) {
-            html.innerHTML = channelLines[channel].join("<br/>\n") + "<br/>";
+        if (channelLines[channel.toLowerCase()]) {
+            html.innerHTML = channelLines[channel.toLowerCase()].join("<br/>\n") + "<br/>";
             html.scrollTop = html.scrollHeight;
         }
     }
@@ -536,22 +536,22 @@ function toURL(str, url) {
     }
     
     if (type == "NOTICE") {
-        fmsg = '<div style="width: 85px; float: left;">'+now+'</div><div style=" float: left;width: 100px;">&nbsp;</div><div style="width: calc(100% - 200px);float: left;"><kbd><span style="color: blue;"> ' + msg + '</span></kbd></div>';
+        fmsg = '<div style="width: 85px; float: left;">'+now+'</div><div style=" float: left;width: 110px;">&nbsp;</div><div style="width: calc(100% - 210px);float: left;"><kbd><span style="color: blue;"> ' + msg + '</span></kbd></div>';
     }
     else if (type == "MISC") {
-        fmsg = '<div style="width: 85px; float: left;">'+now+'</div><div style=" float: left;width: 100px;">&nbsp;</div><div style="width: calc(100% - 200px);float: left;"><kbd><span style="color: green;">' + msg + '</span></kbd></div>';
+        fmsg = '<div style="width: 85px; float: left;">'+now+'</div><div style=" float: left;width: 110px;">&nbsp;</div><div style="width: calc(100% - 210px);float: left;"><kbd><span style="color: green;">' + msg + '</span></kbd></div>';
     }
     else if (type == "ACTION") {
-        fmsg = '<div style="width: 85px; float: left;">'+now+'</div><div style=" float: left;width: 100px;"></div><div style="width: calc(100% - 200px);float: left;"><kbd><span style="color: teal;"><b><i>' + sender + ' ' + msg + '</i></b></span></kbd></div>';
+        fmsg = '<div style="width: 85px; float: left;">'+now+'</div><div style=" float: left;width: 110px;"></div><div style="width: calc(100% - 210px);float: left;"><kbd><span style="color: teal;"><b><i>' + sender + ' ' + msg + '</i></b></span></kbd></div>';
     }
     else if (type == "PART") {
-        fmsg = '<div style="width: 85px; float: left;">'+now+'</div><div style=" float: left;width: 100px;">&nbsp;</div><div style="width: calc(100% - 200px);float: left;"><kbd><span style="color: purple;">Left ' + msg + '</span></kbd></div>';
+        fmsg = '<div style="width: 85px; float: left;">'+now+'</div><div style=" float: left;width: 110px;">&nbsp;</div><div style="width: calc(100% - 210px);float: left;"><kbd><span style="color: purple;">Left ' + msg + '</span></kbd></div>';
     }
     else if (type == "CHANMSG") {
-        fmsg = '<div style="width: 85px; float: left;">'+now+'</div><div style=" float: left;width: 100px;">'+sender+'</div><div style="width: calc(100% - 200px);float: left;"><kbd><span style="color: black;">' + msg + '</span></kbd></div>';
+        fmsg = '<div style="width: 85px; float: left;">'+now+'</div><div style=" float: left;width: 110px;">'+sender+'</div><div style="width: calc(100% - 210px);float: left;"><kbd><span style="color: black;">' + msg + '</span></kbd></div>';
     }
     else if (type == "PRIVMSG") {
-        fmsg = '<div style="width: 85px; float: left;">'+now+'</div><div style=" float: left;width: 100px;">'+sender+'</div><div style="width: calc(100% - 200px);float: left;"><kbd><span style="color: red;">' + msg + '</span></kbd></div>';
+        fmsg = '<div style="width: 85px; float: left;">'+now+'</div><div style=" float: left;width: 110px;">'+sender+'</div><div style="width: calc(100% - 210px);float: left;"><kbd><span style="color: red;">' + msg + '</span></kbd></div>';
     }
     fmsg = '<div style="float: left; clear: both; width: 100%;">' + fmsg + "</div>\n";
     if (!chan) {
@@ -559,7 +559,7 @@ function toURL(str, url) {
     }
     else {
         if (chan == channel) { writeToScreen(fmsg); }
-        channelLines[chan].push('<kbd>' + fmsg + '</kbd>');
+        channelLines[chan.toLowerCase()].push('<kbd>' + fmsg + '</kbd>');
     }
     
   }
@@ -568,7 +568,7 @@ function toURL(str, url) {
     //writeToScreen('<span style="color: green;">Got ' + evt.data +'</span>');
     bReceived += evt.data.length;
     updateStats();
-    if (!evt.data.match(/^(   |RECV|PONG)/)) {
+    if (!evt.data.match(/^(   |RECV   |PONG)/)) {
         document.getElementById('raw').value += evt.data + "\n";
     }
     
@@ -587,7 +587,7 @@ function toURL(str, url) {
         channel = msg;
         var found = false;
         for (i in channels) {
-            if (channels[i].name == channel) {
+            if (channels[i].name.toLowerCase() == channel.toLowerCase()) {
                 found = true;
                 break;
             }
@@ -596,12 +596,12 @@ function toURL(str, url) {
             channels.push({'name': channel, 'type': 2});
         }
         updateChannels();
-        if (!channelLines[channel]) {
-            channelLines[channel] = new Array();
-            channelUsers[channel] = channelUsers[channel] ? channelUsers[channel] : new Array();
+        if (!channelLines[channel.toLowerCase()]) {
+            channelLines[channel.toLowerCase()] = new Array();
+            channelUsers[channel.toLowerCase()] = channelUsers[channel.toLowerCase()] ? channelUsers[channel.toLowerCase()] : new Array();
             pushToScreen(channel, 'JOIN', null, channel);
         }
-        channelUsers[channel] = new Array();
+        channelUsers[channel.toLowerCase()] = new Array();
     }
     if (type && type == 'NICK') {
         username = msg;
@@ -609,7 +609,7 @@ function toURL(str, url) {
     if (type && type == 'PART') {
         var nchannels = new Array();
         for (chan in channels) {
-            if (channels[chan].name != msg) {
+            if (channels[chan].name.toLowerCase() != msg.toLowerCase()) {
                 nchannels.push(channels[chan]);
             }
         }
@@ -629,16 +629,16 @@ function toURL(str, url) {
         chan = arr[1];
         sender = arr[2];
         text = arr[3];
-        if (!channelLines[chan]) {
-            channelLines[chan] = new Array();
+        if (!channelLines[chan.toLowerCase()]) {
+            channelLines[chan.toLowerCase()] = new Array();
             pushToScreen(chan, 'JOIN', null, channel);
         }
         pushToScreen(chan, 'CHANMSG', sender, text);
-        if (channelPings[chan] == 0) {
-            channelPings[chan] = 1;
+        if (channelPings[chan.toLowerCase()] == 0) {
+            channelPings[chan.toLowerCase()] = 1;
         }
         if (new RegExp("\\b" + username + "\\b", "g").test(text)) {
-            channelPings[chan] = 2;
+            channelPings[chan.toLowerCase()] = 2;
         }
         updateChannels(true);
     }
@@ -647,25 +647,56 @@ function toURL(str, url) {
         var arr = msg.match(/^(\S+) (.+)$/);
         sender = arr[1];
         text = arr[2];
+        var senderl = sender.toLowerCase();
         var found = false;
         for (i in channels) {
-            if (channels[i].name == sender) {
+            if (channels[i].name.toLowerCase() == senderl) {
                 found = true;
+                channels[i].name = sender;
                 break;
             }
         }
         if (!found) {
             channels.push({'name': sender, 'type': 1})
         }
-        if (!channelLines[sender]) {
-            channelLines[sender] = new Array();
+        if (!channelLines[senderl]) {
+            channelLines[senderl] = new Array();
         }
-        pushToScreen(sender, 'CHANMSG', sender, text);
-        if (!channelPings[sender] || channelPings[sender] == 0) {
-            channelPings[sender] = 1;
+        pushToScreen(senderl, 'CHANMSG', sender, text);
+        if (!channelPings[senderl] || channelPings[senderl] == 0) {
+            channelPings[senderl] = 1;
         }
         if (new RegExp("\\b" + username + "\\b", "g").test(text)) {
-            channelPings[sender] = 2;
+            channelPings[senderl] = 2;
+        }
+        updateChannels(true);
+    }
+    if (type && type == "TO") {
+        var recipient, text;
+        var arr = msg.match(/^(\S+) (.+)$/);
+        recipient = arr[1];
+        text = arr[2];
+        var found = false;
+        recipient = recipient.toLowerCase()
+        for (i in channels) {
+            if (channels[i].name.toLowerCase() == recipient) {
+                found = true;
+                recipient = channels[i].name
+                break;
+            }
+        }
+        if (!found) {
+            channels.push({'name': recipient, 'type': 1})
+        }
+        if (!channelLines[recipient.toLowerCase()]) {
+            channelLines[recipient.toLowerCase()] = new Array();
+        }
+        pushToScreen(recipient, 'CHANMSG', username, text);
+        if (!channelPings[recipient.toLowerCase()] || channelPings[recipient.toLowerCase()] == 0) {
+            channelPings[recipient.toLowerCase()] = 1;
+        }
+        if (new RegExp("\\b" + username + "\\b", "g").test(text)) {
+            channelPings[recipient.toLowerCase()] = 2;
         }
         updateChannels(true);
     }
@@ -678,22 +709,22 @@ function toURL(str, url) {
         if (cmd == 'TOPIC') {
             params = params.replace(/^:/, "");
             pushToScreen(chan, 'MISC', null, usr + " changed the topic to: " + params);
-            topics[chan] = params;
+            topics[chan.toLowerCase()] = params;
             updateChannels(true);
         }
         if (cmd == 'JOIN') {
             pushToScreen(chan, 'MISC', null, usr + " joined the channel.");
             if (usr != username) {
-                channelUsers[chan].push({'name': usr, 'class': ''});
+                channelUsers[chan.toLowerCase()].push({'name': usr, 'class': ''});
             }
             updateChannels(true);
         }
         if (cmd == 'PART') {
             params = params.replace(/^:/, "");
             pushToScreen(chan, 'MISC', null, usr + " left the channel (" + params + ").");
-            for (i in channelUsers[chan]) {
-                if (channelUsers[chan][i].name == usr) {
-                    channelUsers[chan].splice(i, 1);
+            for (i in channelUsers[chan.toLowerCase()]) {
+                if (channelUsers[chan.toLowerCase()][i].name == usr) {
+                    channelUsers[chan.toLowerCase()].splice(i, 1);
                     break;
                 }
             }
@@ -722,9 +753,9 @@ function toURL(str, url) {
                 else {
                     nmode = 0;
                 }
-                for (i in channelUsers[chan]) {
-                    if (channelUsers[chan][i].name == usr) {
-                        channelUsers[chan][i].class = nmode;
+                for (i in channelUsers[chan.toLowerCase()]) {
+                    if (channelUsers[chan.toLowerCase()][i].name == usr) {
+                        channelUsers[chan.toLowerCase()][i].class = nmode;
                         break;
                     }
                 }
@@ -735,7 +766,7 @@ function toURL(str, url) {
         if (cmd == 'QUIT') {
             params = params.replace(/^:/, "");
             for (c in channels) {
-                var chan = channels[c].name;
+                var chan = channels[c].name.toLowerCase();
                 if (channelUsers[chan]) {
                     for (i in channelUsers[chan]) {
                         if (channelUsers[chan][i].name == usr) {
@@ -755,7 +786,7 @@ function toURL(str, url) {
                 pushToScreen(channel, 'MISC', null, "You are now known as " + params);
             }
             for (c in channels) {
-                var cname = channels[c].name;
+                var cname = channels[c].name.toLowerCase();
                 if (cname.match(/^#/)) {
                     for (i in channelUsers[cname]) {
                         if (channelUsers[cname][i].name == usr) {
@@ -767,7 +798,7 @@ function toURL(str, url) {
                     }
                 } else {
                     if (cname == usr) {
-                        channelLines[params] = channelLines[usr];
+                        channelLines[params.toLowerCase()] = channelLines[usr.toLowerCase()];
                     }
                 }
                 
@@ -801,7 +832,7 @@ function toURL(str, url) {
                     uclass = (arr[1] == "@") ? 2 : 1;
                 }
                 var usr = users[i].replace(/^[@+]/, "");
-                channelUsers[chan].push({'name': usr, 'class': uclass});
+                channelUsers[chan.toLowerCase()].push({'name': usr, 'class': uclass});
                 
             }
             updateChannels(true);
@@ -810,7 +841,7 @@ function toURL(str, url) {
             var ulist = params.match(/(#\S+) :(.+)$/);
             var chan = ulist[1];
             var topic = ulist[2];
-            topics[chan] = topic;
+            topics[chan.toLowerCase()] = topic;
             updateChannels(true);
         }
     }
