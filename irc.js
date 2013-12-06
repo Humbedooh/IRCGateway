@@ -748,7 +748,7 @@ function onMessage(evt) {
                 var arr = message.match(/^\/topic (.+)$/);
                 if (arr) {
                     message = message.replace(/^\/topic\s/, "");
-                    sendToSocket("TOPIC " + channel + " :" + message);
+                    sendToSocket("TOPIC " + currentChannel + " :" + message);
                     return;
                 }
             }
