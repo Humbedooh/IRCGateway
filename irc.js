@@ -87,7 +87,7 @@ function addChannel(name) {
                 'class': cl
               };
     channels.push(channel);
-    writeToScreen("Added " + channel.name + " to list of channels");
+    //writeToScreen("Added " + channel.name + " to list of channels");
   }
   return channel;
 }
