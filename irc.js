@@ -197,7 +197,7 @@ function removeUser(chan, name) {
 }
 
 function renameUser(oldName, newName) {
-  var lname = oldName.toLowerCase()
+  var lname = oldName.toLowerCase();
   for (c in channels) {
     var channel = channels[c];
     for (u in channel.users) {
@@ -630,7 +630,7 @@ function onMessage(evt) {
             var cname = channels[c].lname;
             if (cname.match(/^#/)) {
               for (i in channels[c].users) {
-                var user = channel[c].users[i];
+                var user = channels[c].users[i];
                 if (user.name == usr && user.name != username) {
                   pushToScreen(cname, 'MISC', null, usr + " changed name to " + params);
                 }
