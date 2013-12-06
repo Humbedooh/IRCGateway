@@ -429,7 +429,7 @@ function pushToScreen(chan, type, sender, msg) {
       fmsg = '<div style="width: 85px; float: left;">'+now+'</div><div style=" float: left;width: 150px;" padding-right: 5px;>&nbsp;</div><div style="width: calc(100% - 250px);float: left;"><kbd><span style="color: green;">' + msg + '</span></kbd></div>';
   }
   else if (type == "ACTION") {
-      fmsg = '<div style="width: 85px; float: left;">'+now+'</div><div style=" float: left;width: 150px; padding-right: 5px;"></div><div style="width: calc(100% - 250px);float: left;"><kbd><span style="color: teal;"><b><i>' + sender + ' ' + msg + '</i></b></span></kbd></div>';
+      fmsg = '<div style="width: 85px; float: left;">'+now+'</div><div style=" float: left;width: 150px; padding-right: 5px;">&nbsp;</div><div style="width: calc(100% - 250px);float: left;"><kbd><span style="color: teal;"><b><i>' + sender + ' ' + msg + '</i></b></span></kbd></div>';
   }
   else if (type == "PART") {
       fmsg = '<div style="width: 85px; float: left;">'+now+'</div><div style=" float: left;width: 150px; padding-right: 5px;">&nbsp;</div><div style="width: calc(100% - 250px);float: left;"><kbd><span style="color: purple;">Left ' + msg + '</span></kbd></div>';
