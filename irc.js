@@ -177,6 +177,7 @@ function setUserFlags(chan, name, flags) {
         var cl = 0;
         if (flags.match(/v/i)) cl = 1;
         if (flags.match(/o/i)) cl = 2;
+        user.class = cl;
       }
     }
   }
@@ -590,12 +591,11 @@ function onMessage(evt) {
         // Mode change for a user
         if (cmd == 'MODE') {
             pushToScreen(chan, 'MISC', null, usr + " set mode " + params);
-            var arr = params.match(/([+-])([vob]) (\S+)/);
+            var arr = params.match(/([+-][vob]+) (\S+)/i);
             if (arr) {
-                var add = arr[1];
-                var mode = arr[2].toLowerCase();
-                var usr = arr[3];
-                setUserFlags(chan, usr, mode);
+                var flags = arr[1].toLowerCase();
+                var usr = arr[2];
+                setUserFlags(chan, usr, flags);
             }
             updateView(true);
             return;
