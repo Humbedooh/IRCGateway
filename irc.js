@@ -256,7 +256,7 @@ function updateView(ignoreMessages) {
       }
       el.style.cursor = "pointer";
       el.onclick = changeChannelClick;
-      el.tooltip = user.id;
+      el.title = user.id;
       list.appendChild(el);
     }
     userListObject.appendChild(list);
@@ -697,6 +697,21 @@ function onMessage(evt) {
           sendToSocket("JOIN #IRCGateway");
           isReady = 1;
       }
+  }
+  if (type && type == "RAW") {
+    var arr = msg.match(/^\:([^!]+)\!(\S+) [A-Z]+/);
+    if (arr) {
+      var nick = arr[1].toLowerCase();
+      var id = arr[2];
+      for (c in channels) {
+        for (u in channels[c].users) {
+          if (channels[c].users[u].lname == nick) {
+            channels[c].users[u].id = id;
+          }
+        }
+      }
+      updateView(true);
+    }
   }
 }
 
