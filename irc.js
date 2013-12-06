@@ -140,6 +140,9 @@ function addUser(chan, name, flags) {
     for (u in channel.users) {
       if (channel.users[u].lname == lname) {
         found = true;
+        if (flags && flags != "") {
+          setUserFlags(chan, name, flags);
+        }
         break;
       }
     }
