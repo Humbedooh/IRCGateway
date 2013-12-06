@@ -813,13 +813,14 @@ function keyHandler(obj,e) {
     var TABKEY = 9;
     if(e.keyCode == TABKEY) {
         var lastWord = obj.value.match(/(\S+)$/);
-        if (lastWord && channel && channelUsers[channel]) {
+        var channel = getChannel(currentChannel);
+        if (lastWord && channel) {
             var word = lastWord[1].toLowerCase();
             obj.value = obj.value.substring(0, obj.value.length - word.length);
-            for (i in channelUsers[channel]) {
-                var usr = channelUsers[channel][i].name.toLowerCase();
+            for (i in channel.users) {
+                var usr = channel.users[i].lname;
                 if (usr.length >= word.length && usr.substring(0, word.length) == word) {
-                    obj.value += channelUsers[channel][i].name;
+                    obj.value += channel.users[i].name;
                     break;
                 }
             }
