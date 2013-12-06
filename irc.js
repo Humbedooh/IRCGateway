@@ -783,6 +783,15 @@ function onMessage(evt) {
                 }
             }
             else {
+              if (cmd == 'server') {
+                for (c in channels) {
+                  if (channels[c].name != "@server") {
+                    channels[c].active = false;
+                  }
+                }
+                currentChannel = "@server";
+                updateView();
+              }
                 var arr = message.match(/^\/([a-zA-Z]+)\s?(.*)$/)
                 if (arr) {
                     cmd = arr[1].toUpperCase();
