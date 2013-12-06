@@ -5,7 +5,7 @@ var output;
 var pInput = "";
 var bSent = 0;
 var bReceived = 0;
-var bURL = "";
+var bURL = "Console";
 var bSecs = 0;
 var channels = new Array();
 var currentChannel = "@server";
@@ -215,8 +215,8 @@ function renameUser(oldName, newName) {
 
 
 function changeChannelClick(event) {
-  if (event.target.innerHTML) {
-    currentChannel = event.target.innerHTML;
+  if (event.target.getAttribute('data-irc')) {
+    currentChannel = event.target.getAttribute('data-irc');
     var channel = getChannel(currentChannel);
     if (!channel) {
       channel = addChannel(currentChannel);
@@ -258,6 +258,7 @@ function updateView(ignoreMessages) {
           el.className = "user_voiced";
       }
       el.style.cursor = "pointer";
+      el.setAttribute('data-irc', user.name);
       el.onclick = changeChannelClick;
       el.title = user.id;
       list.appendChild(el);
@@ -273,6 +274,8 @@ function updateView(ignoreMessages) {
     if (channel.class < 3 && channel.active == 1) {
       var el = document.createElement('li');
       el.innerHTML = channel.name;
+      el.setAttribute('data-irc', channel.name);
+      if (channel.class == 2) { el.className = "server"; el.innerHTML = bURL; }
       if (channel.class == 1) el.className = "user_channel";
       if (channel.class == 0) el.className = "user_normal";
       if (channel.lname == currentChannel.toLowerCase()) {
@@ -784,6 +787,10 @@ function onMessage(evt) {
             }
             else {
               if (cmd == 'server') {
+                var arr = message.match(/^\/server\s?([^:]+):?/)
+                if (arr) {
+                  bURL = arr[1];
+                }
                 for (c in channels) {
                   if (channels[c].name != "@server") {
                     channels[c].active = false;
