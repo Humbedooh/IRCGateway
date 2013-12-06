@@ -130,6 +130,10 @@ function readIRC(s, r)
                     handleMessage(r, receive, usr)
                 elseif string.match(receive, "^%S+ ([A-Z]+) #%S+") then
                     local who, ident, cmd, channel, params = string.match(receive, "^:([^!]+)!(%S+) ([A-Z0-9]+) (#%S+)(.*)")
+                    -- server did something, not a user?
+                    if not who then
+                        who, cmd, channel, params = string.match(receive, "^:(%S+) ([A-Z0-9]+) (#%S+)(.*)")
+                    end
                     if params then params = params:gsub("^%s+:?", "") end
                     if cmd == "JOIN" and who == usr then
                         --r:wswrite("JOIN " .. channel)
