@@ -1,11 +1,12 @@
--- IRC Backend
-
-local provider = "SomeIRCGateway.com"
+-- IRC test thingy
 local socket = require "socket"
 local IRCSocket = nil
+local provider = "example.com"
 local lastPing = os.time()
+_G.usr = "Foo"
+local nick = ""
 
-function handleMessage(r, line, usr)
+function handleMessage(r, line)
     if line then
         -- Split up the sender name and his/her identity
         local sender, identity = line:match("^:([^%!]+)!.-@(%S+)")
@@ -20,7 +21,6 @@ function handleMessage(r, line, usr)
             recipient = channelLine:match("([^:,]+)[,:]%s+(.+)")
         end
         if not channel then recipient, text = line:match("PRIVMSG ([^ ]+) :(.+)") end
-        local forMe = (sender and text and recipient:lower() == usr:lower())
         
         -- Write out as channel message or private message to browser client
         if channel then
@@ -31,8 +31,8 @@ function handleMessage(r, line, usr)
     end
 end
 
-function handleInput(r, s, usr)
-    local acceptedCommands = { "PRIVMSG", "JOIN", "PART", "TOPIC", "MODE", "QUIT", "NICK", "WHOIS" }
+function handleInput(r, s)
+    local acceptedCommands = { "PRIVMSG", "JOIN", "PART", "TOPIC", "MODE", "QUIT", "NICK", "WHOIS", "QUOTE", "SERVER" }
     local line = r:wsread()
     if line then
         r:wswrite("RECV " .. line)
@@ -54,12 +54,17 @@ function handleInput(r, s, usr)
             r:wswrite("NOTICE Unknown or unaccepted command given!")
             return true
         end
+        
         if cmd ~= "PRIVMSG" then
             if cmd == "JOIN" then
-                r:wswrite("JOIN " .. params)
-                s:send("JOIN " .. params .. "\r\n")
+                r:wswrite("JOIN " .. params:lower())
+                s:send("JOIN " .. params:lower() .. "\r\n")
+            elseif cmd == "QUOTE" then
+                s:send(params:gsub("^%s+", "") .. "\r\n")
+                r:wswrite("SENT " .. params:gsub("^%s+", ""))
+                return true
             elseif cmd == "PART" then
-                r:wswrite("PART " .. params)
+                r:wswrite("PART " .. params:lower())
                 s:send("PART " .. params .. "\r\n")
             elseif cmd == "QUIT" then
                 r:wswrite(("QUIT :%s"):format(provider))
@@ -67,6 +72,9 @@ function handleInput(r, s, usr)
                 s:close()
                 IRCSocket = nil
                 return false
+            elseif cmd == "SERVER" then
+                s = server(r, params)
+                return true
             else
                 s:send(line .. "\r\n")
             end
@@ -89,7 +97,7 @@ function handleInput(r, s, usr)
         if channel then
             r:wswrite(( "CHANMSG %s %s %s"):format(channel, usr, channelLine))
         elseif recipient and text then
-            r:wswrite(( "PRIVMSG %s %s"):format(recipient, text))
+            r:wswrite(( "TO %s %s"):format(recipient, text))
         end
         
     -- Ping?
@@ -104,7 +112,7 @@ function handleInput(r, s, usr)
     return true
 end
 
-function readIRC(s, r, usr)
+function readIRC(s, r)
     while true do
         local receive, err = IRCSocket:receive('*l')
         local now = os.time()
@@ -114,6 +122,8 @@ function readIRC(s, r, usr)
             -- Ping? PONG!
             if string.find(receive, "PING :") then
                 IRCSocket:send("PONG :" .. string.sub(receive, (string.find(receive, "PING :") + 6)) .. "\r\n\r\n")
+            elseif receive:match("^%S+%s+NOTICE%s+") then
+                r:wswrite(receive:match("^%S+%s+(.+)$"))
             else
                 -- private/channel messages
                 if string.match(receive, ":([^!]+)!(%S+) PRIVMSG") then
@@ -122,22 +132,30 @@ function readIRC(s, r, usr)
                     local who, ident, cmd, channel, params = string.match(receive, "^:([^!]+)!(%S+) ([A-Z0-9]+) (#%S+)(.*)")
                     if params then params = params:gsub("^%s+:?", "") end
                     if cmd == "JOIN" and who == usr then
-                        r:wswrite("JOIN " .. channel)
+                        --r:wswrite("JOIN " .. channel)
                     end
                     r:wswrite(("CMD %s %s %s %s"):format(cmd, channel, who, params or ""))
                 elseif string.match(receive, "^%S+ ([A-Z]+) .+") then
                     local who, ident, cmd, params = string.match(receive, "^:([^!]+)!(%S+) ([A-Z]+) (.*)")
                     r:wswrite(("CMD %s #fakechannel %s %s"):format(cmd, who, params or ""))
+                    if cmd == "NICK" and who == usr then
+                        usr = params:gsub("^:", "")
+                    end
                 elseif string.match(receive, ":%S+ (%d+) .+") then
                     local server, code, params = string.match(receive, ":(%S+) (%d+) (.+)")
                     r:wswrite(("SRV %s %s %s"):format(server, code, params))
+                    if code == "001" then
+                        usr = params:match("(%S+)")
+                    end
+                    if code == "376" then
+                        r:wswrite("NICK " .. usr)
+                    end
                 else
                     r:wswrite("UNKNOWN " .. (recieve or ""))
                 end
             end
         elseif err == "timeout" then
-            if not handleInput(r, s, usr) then
-                r:wswrite("NOTICE Bad connection?")
+            if not handleInput(r, IRCSocket, usr) then
                 break
             end
         elseif err == "closed" then
@@ -146,6 +164,38 @@ function readIRC(s, r, usr)
         end
         
     end
+end
+
+function server(r, line)
+    if IRCSocket then
+        IRCSocket:send("QUIT\r\n")
+        IRCSocket:close()
+    end
+    local server, port = line:match("([-a-z0-9_.]+):?(%d*)$")
+    if not port or port == "" then
+        port = 6667
+    end
+    if not server then
+        server = "chat.freenode.net"
+    end
+    local s = socket.tcp()
+    IRCSocket = s
+    s:settimeout(0.25)
+    
+    -- Connect to IRC
+    r:wswrite(("NOTICE Connecting to %s (port %d)..."):format(server, port))
+    local success, err = s:connect(socket.dns.toip(server), port)
+    if not success then
+        r:wswrite("Failed to connect: ".. err .. "\n")
+        r:wsclose()
+        return apache2.DONE
+    end
+    
+    IRCSocket:send("USER " .. usr .. " " .. " " .. usr .. " " .. usr .. " " .. ":" .. usr .. "\r\n")
+    IRCSocket:send("NICK " .. usr .. "\r\n")
+    r:wswrite(("NOTICE Connected as %s!"):format(usr))
+    r:wswrite("NOTICE Use /nick [nickname] to set your nick name before joining any channels!")
+    return IRCSocket
 end
 
 function handle(r)
@@ -165,9 +215,9 @@ function handle(r)
         local s = socket.tcp()
         IRCSocket = s
         s:settimeout(0.25)
-        local b = 0
-        
+
         -- Connect to IRC
+        
         r:wswrite(("NOTICE Connecting to %s (port %d)..."):format(server, port))
         local success, err = s:connect(socket.dns.toip(server), 6667)
         if not success then
@@ -177,18 +227,18 @@ function handle(r)
         end
         
         -- Fetch the username to use
-        local usr = r:wsread()
+        usr = r:wsread()
         if not usr or (not usr:match("^%S+")) then
             usr = ("Guest" .. math.random(1000,99999))
         end
-        s:send("USER " .. usr .. " " .. " " .. usr .. " " .. usr .. " " .. ":" .. usr .. "\r\n\r\n")
-        s:send("NICK " .. usr .. "\r\n\r\n")
-        
+        IRCSocket:send("USER " .. usr .. " " .. " " .. usr .. " " .. usr .. " " .. ":" .. usr .. "\r\n")
+        IRCSocket:send("NICK " .. usr .. "\r\n")
+
         r:wswrite("NICK " .. usr);
         r:wswrite(("NOTICE Connected as %s!"):format(usr))
         r:wswrite("NOTICE Use /join #channelname to join a channel!")
         r:wswrite("STARTPING")
-        readIRC(s, r, usr)
+        readIRC(s, r)
         
         if IRCSocket then
             IRCSocket:send("QUIT :Page closed.\r\n\r\n")
