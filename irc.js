@@ -591,6 +591,25 @@ function onMessage(evt) {
             return;
         }
         
+        // Someone got kicked (was it us?)
+        if (cmd == 'KICK') {
+            var arr = params.match(/(\S+)\s:?(.*)$/)
+            var target = arr[1];
+            var reason = arr[2];
+            pushToScreen(chan, 'MISC', null, usr + " kicked " + target + " from the channel (" + reason + ").");
+            removeUser(chan, target);
+            if (target == username) {
+              var channel = getChannel(chan);
+              if (chan) {
+                channel.active = false;
+                pushToScreen("@server", 'NOTICE', null, usr + " kicked you from the " + chan + " (" + reason + ").");
+                updateView();
+              }
+            }
+            updateView(true);
+            return;
+        }
+        
         // A server notice
         if (cmd == 'NOTICE') {
             pushToScreen(currentChannel, 'NOTICE', null, params);
@@ -669,6 +688,10 @@ function onMessage(evt) {
       if (code == '433') {
           params = params.replace(/^\s*\S+ :/, "");
           pushToScreen(null, 'NOTICE', null, "Nickname already in use! Please use /nick [newnickname] to change to a different nick.");
+      }
+      if (code == '404') {
+          params = params.replace(/^\s*\S+ :/, "");
+          pushToScreen(null, 'NOTICE', null, params);
       }
       if (code == '432') {
           params = params.replace(/^\s*\S+ :/, "");
