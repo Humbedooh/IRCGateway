@@ -420,25 +420,25 @@ function pushToScreen(chan, type, sender, msg) {
   }
   
   if (type == "NOTICE") {
-      fmsg = '<div style="width: 85px; float: left;">'+now+'</div><div style=" float: left;width: 140px;">&nbsp;</div><div style="width: calc(100% - 240px);float: left;"><kbd><span style="color: blue;"> ' + msg + '</span></kbd></div>';
+      fmsg = '<div style="width: 85px; float: left;">'+now+'</div><div style=" float: left;width: 150px; padding-right: 5px;">&nbsp;</div><div style="width: calc(100% - 250px);float: left;"><kbd><span style="color: blue;"> ' + msg + '</span></kbd></div>';
   }
   else if (type == "JOIN") {
-      fmsg = '<div style="width: 85px; float: left;">'+now+'</div><div style=" float: left;width: 140px;">&nbsp;</div><div style="width: calc(100% - 240px);float: left;"><kbd><span style="color: green;">You joined the channel</span></kbd></div>';
+      fmsg = '<div style="width: 85px; float: left;">'+now+'</div><div style=" float: left;width: 150px; padding-right: 5px;">&nbsp;</div><div style="width: calc(100% - 250px);float: left;"><kbd><span style="color: green;">You joined the channel</span></kbd></div>';
   }
   else if (type == "MISC") {
-      fmsg = '<div style="width: 85px; float: left;">'+now+'</div><div style=" float: left;width: 140px;">&nbsp;</div><div style="width: calc(100% - 240px);float: left;"><kbd><span style="color: green;">' + msg + '</span></kbd></div>';
+      fmsg = '<div style="width: 85px; float: left;">'+now+'</div><div style=" float: left;width: 150px;" padding-right: 5px;>&nbsp;</div><div style="width: calc(100% - 250px);float: left;"><kbd><span style="color: green;">' + msg + '</span></kbd></div>';
   }
   else if (type == "ACTION") {
-      fmsg = '<div style="width: 85px; float: left;">'+now+'</div><div style=" float: left;width: 140px;"></div><div style="width: calc(100% - 240px);float: left;"><kbd><span style="color: teal;"><b><i>' + sender + ' ' + msg + '</i></b></span></kbd></div>';
+      fmsg = '<div style="width: 85px; float: left;">'+now+'</div><div style=" float: left;width: 150px; padding-right: 5px;"></div><div style="width: calc(100% - 250px);float: left;"><kbd><span style="color: teal;"><b><i>' + sender + ' ' + msg + '</i></b></span></kbd></div>';
   }
   else if (type == "PART") {
-      fmsg = '<div style="width: 85px; float: left;">'+now+'</div><div style=" float: left;width: 140px;">&nbsp;</div><div style="width: calc(100% - 240px);float: left;"><kbd><span style="color: purple;">Left ' + msg + '</span></kbd></div>';
+      fmsg = '<div style="width: 85px; float: left;">'+now+'</div><div style=" float: left;width: 150px; padding-right: 5px;">&nbsp;</div><div style="width: calc(100% - 250px);float: left;"><kbd><span style="color: purple;">Left ' + msg + '</span></kbd></div>';
   }
   else if (type == "CHANMSG") {
-      fmsg = '<div style="width: 85px; float: left;">'+now+'</div><div style=" float: left;width: 140px;">'+sender+'</div><div style="width: calc(100% - 240px);float: left;"><kbd><span style="color: black;">' + msg + '</span></kbd></div>';
+      fmsg = '<div style="width: 85px; float: left;">'+now+'</div><div style=" float: left;width: 150px; text-align: right; padding-right: 5px;">'+sender+'</div><div style="width: calc(100% - 250px);float: left;"><kbd><span style="color: black;">' + msg + '</span></kbd></div>';
   }
   else if (type == "PRIVMSG") {
-      fmsg = '<div style="width: 85px; float: left;">'+now+'</div><div style=" float: left;width: 140px;">'+sender+'</div><div style="width: calc(100% - 240px);float: left;"><kbd><span style="color: red;">' + msg + '</span></kbd></div>';
+      fmsg = '<div style="width: 85px; float: left;">'+now+'</div><div style=" float: left;width: 150px; text-align: right; padding-right: 5px;">'+sender+'</div><div style="width: calc(100% - 250px);float: left;"><kbd><span style="color: red;">' + msg + '</span></kbd></div>';
   }
   fmsg = '<div style="float: left; clear: both; width: 100%;">' + fmsg + "</div>\n";
   
