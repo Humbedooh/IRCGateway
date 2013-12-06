@@ -130,6 +130,9 @@ function joinChannel(name) {
 
 function addUser(chan, name, flags) {
   var channel = getChannel(chan);
+  if (!channel) {
+    channel = addChannel(chan);
+  }
   var lname = name.toLowerCase()
   //writeToScreen("Going to add " + name + " to the list on " + channel.name);
   if (channel) {
@@ -659,14 +662,14 @@ function onMessage(evt) {
       }
       if (code == '433') {
           params = params.replace(/^\s*\S+ :/, "");
-          if (isReady == 0) {
-              //sendToSocket("QUIT");
-              //eMsg = "That nickname was already in use, pick another!";
-          }
           pushToScreen(null, 'NOTICE', null, "Nickname already in use! Please use /nick [newnickname] to change to a different nick.");
       }
+      if (code == '432') {
+          params = params.replace(/^\s*\S+ :/, "");
+          pushToScreen(null, 'NOTICE', null, "Erroneous nickname used! Please use /nick [newnickname] to change to a different nick.");
+      }
       if (code == '353') {
-          var ulist = params.match(/(#\S+) :(.+)$/);
+          var ulist = params.match(/(#\S+) :?(.+)$/);
           var chan = ulist[1];
           var theList = ulist[2];
           var users = theList.split(/ /);
