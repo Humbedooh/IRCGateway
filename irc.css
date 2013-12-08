@@ -26,7 +26,7 @@
 }
 
 .user_operator {
-    background-image: url(/irc/user_operator.png);
+    background-image: url(irc/user_operator.png);
     background-repeat: no-repeat;
     background-position: center left;
     padding-left: 30px;
@@ -35,7 +35,7 @@
 }
 
 .user_voiced {
-    background-image: url(/irc/user_voiced.png);
+    background-image: url(irc/user_voiced.png);
     background-repeat: no-repeat;
     background-position: center left;
     padding-left: 30px;
@@ -44,7 +44,7 @@
 }
 
 .user_normal {
-    background-image: url(/irc/user_normal.png);
+    background-image: url(irc/user_normal.png);
     background-repeat: no-repeat;
     background-position: center left;
     padding-left: 30px;
@@ -53,7 +53,7 @@
 }
 
 .user_channel {
-    background-image: url(/irc/channel.png);
+    background-image: url(irc/channel.png);
     background-repeat: no-repeat;
     background-position: center left;
     padding-left: 30px;
@@ -64,7 +64,7 @@
 }
 
 .server {
-    background-image: url(/irc/computer.png);
+    background-image: url(irc/computer.png);
     background-repeat: no-repeat;
     background-position: center left;
     padding-left: 30px;
@@ -75,7 +75,7 @@
 }
 
 .server_selected {
-    background-image: url(/irc/computer.png), linear-gradient(to bottom,  rgba(242,246,248,1) 0%,rgba(216,225,231,1) 50%,rgba(181,198,208,1) 51%,rgba(224,239,249,1) 100%); /* W3C */
+    background-image: url(irc/computer.png), linear-gradient(to bottom,  rgba(242,246,248,1) 0%,rgba(216,225,231,1) 50%,rgba(181,198,208,1) 51%,rgba(224,239,249,1) 100%); /* W3C */
     background-repeat: no-repeat;
     background-position: center left;
     padding-left: 30px;
@@ -86,7 +86,7 @@
 }
 
 .user_channel_selected {
-    background-image: url(/irc/channel.png), linear-gradient(to bottom,  rgba(242,246,248,1) 0%,rgba(216,225,231,1) 50%,rgba(181,198,208,1) 51%,rgba(224,239,249,1) 100%); /* W3C */
+    background-image: url(irc/channel.png), linear-gradient(to bottom,  rgba(242,246,248,1) 0%,rgba(216,225,231,1) 50%,rgba(181,198,208,1) 51%,rgba(224,239,249,1) 100%); /* W3C */
     background-repeat: no-repeat;
     background-position: center left;
     padding-left: 30px;
@@ -97,7 +97,7 @@
 }
 
 .user_normal_selected {
-    background-image: url(/irc/user_normal.png), linear-gradient(to bottom,  rgba(242,246,248,1) 0%,rgba(216,225,231,1) 50%,rgba(181,198,208,1) 51%,rgba(224,239,249,1) 100%); /* W3C */
+    background-image: url(irc/user_normal.png), linear-gradient(to bottom,  rgba(242,246,248,1) 0%,rgba(216,225,231,1) 50%,rgba(181,198,208,1) 51%,rgba(224,239,249,1) 100%); /* W3C */
     background-repeat: no-repeat;
     background-position: center left;
     padding-left: 30px;
@@ -108,7 +108,7 @@
 }
 
 .user_normal_selected {
-    background-image: url(/irc/user_normal.png), linear-gradient(to bottom,  rgba(242,246,248,1) 0%,rgba(216,225,231,1) 50%,rgba(181,198,208,1) 51%,rgba(224,239,249,1) 100%); /* W3C */
+    background-image: url(irc/user_normal.png), linear-gradient(to bottom,  rgba(242,246,248,1) 0%,rgba(216,225,231,1) 50%,rgba(181,198,208,1) 51%,rgba(224,239,249,1) 100%); /* W3C */
     background-repeat: no-repeat;
     background-position: center left;
     padding-left: 30px;
