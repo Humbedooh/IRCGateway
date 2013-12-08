@@ -203,6 +203,16 @@ function server(r, line)
 end
 
 function handle(r)
+
+    -- Check if httpd supports websocket upgrade or not
+    if not r.wsupgrade then
+        r.content_type = "text/plain"
+        r:puts("This feature requires WebSocket support from mod_lua.\n")
+        r:puts("The minimum required version of httpd to support this is 2.4.7\n")
+        r:puts("You have: " .. apache2.version)
+        return apache2.OK
+    end
+
     if r:wsupgrade() then
 
         -- Get server to connect to
