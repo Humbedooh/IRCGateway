@@ -21,5 +21,11 @@ Watch a live demo at <http://www.ircgateway.com>
 - Change the WS:// URI in irc.js to match your site
 - Enable mod_lua for .lua files. (`AddHandler lua-script .lua`)
 
+__Note:__
+If you use this over WSS (WebSocket+SSL) with mod_reqtimeout, 
+please add the following to your virtual host configuration, 
+to prevent sessions from expiring: `RequestReadTimeout Body=0,minRate=2`
+
+
 Copyright(c) 2013, Daniel Gruno.
 Licensed under the Apache License, version 2.0.
