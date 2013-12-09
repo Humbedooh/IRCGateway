@@ -749,6 +749,11 @@ function onMessage(evt) {
 
   function onError(evt)
   {
+    for (c in channels) {
+      if (channels[c].name != "@server") {
+        channels[c].active = false;
+      }
+    }
     writeToScreen('<span style="color: red;">ERROR:</span> ' + evt.data);
   }
 
