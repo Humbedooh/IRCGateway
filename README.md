@@ -2,7 +2,7 @@ IRCGateway
 ==========
 
 Browser-based IRC Client with Javascript + WebSockets on a httpd Backend.
-Watch a live demo at <http://www.ircgateway.com>
+Watch a live demo at <https://www.ircgateway.com>
 
 ## Server requirements: ##
 

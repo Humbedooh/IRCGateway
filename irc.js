@@ -1,5 +1,6 @@
+var server_URL = "www.ircgateway.com/irc.lua";
 
-var wsUri = "ws://www.ircgateway.com/irc.lua";
+var wsUri = (window.location.protocol == "https:" ? "wss" : "ws") + "://" + server_URL;
 var eMsg = "";
 var output;
 var pInput = "";
