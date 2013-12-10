@@ -780,6 +780,7 @@ function onMessage(evt) {
               pushToScreen(currentChannel, "NOTICE", null, "/msg [recipient] [message]: Sends a private message to someone.");
               pushToScreen(currentChannel, "NOTICE", null, "/me [action]: Performs an action in a channel.");
               pushToScreen(currentChannel, "NOTICE", null, "/server [servername[:port]]: Connects to a new IRC server.");
+              pushToScreen(currentChannel, "NOTICE", null, "/quit: Exits the IRC session.");
             }
             // Actions
             if (cmd == 'me') {
