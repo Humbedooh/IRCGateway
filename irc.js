@@ -771,6 +771,17 @@ function onMessage(evt) {
         var arr = message.match(/^\/([a-z]+)/i);
         if (arr) {
             var cmd = arr[1];
+            if (cmd == 'help') {
+              pushToScreen(currentChannel, "NOTICE", null, "Available commands: ");
+              pushToScreen(currentChannel, "NOTICE", null, "/join #channel-name: Joins a channel.");
+              pushToScreen(currentChannel, "NOTICE", null, "/part [#channel-name]: Parts a channel.");
+              pushToScreen(currentChannel, "NOTICE", null, "/topic [new topic]: Sets the topic for the current channel.");
+              pushToScreen(currentChannel, "NOTICE", null, "/nick [new-nickname]: Changes your nickname (if available)");
+              pushToScreen(currentChannel, "NOTICE", null, "/msg [recipient] [message]: Sends a private message to someone.");
+              pushToScreen(currentChannel, "NOTICE", null, "/me [action]: Performs an action in a channel.");
+              pushToScreen(currentChannel, "NOTICE", null, "/server [servername[:port]]: Connects to a new IRC server.");
+            }
+            // Actions
             if (cmd == 'me') {
                 message = message.replace(/^\/me\s/i, "");
                 message = "\x01" + "ACTION " + message + "\x01";
