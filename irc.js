@@ -401,8 +401,9 @@ function pushToScreen(chan, type, sender, msg) {
   
   // Colorise messages
   if (msg) {
-      msg = msg.replace(/</, "&lt;");
-      msg = msg.replace(/(([a-z]+):\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&amp;:/~\+#]*[\w\-\@?^=%&amp;/~\+#])?)/, toURL);
+      msg = msg.replace(/</g, "&lt;");
+      msg = msg.replace(/>/g, "&gt;");
+      msg = msg.replace(/(([a-z]+):\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&amp;:/~\+#]*[\w\-\@?^=%&amp;/~\+#])?)/g, toURL);
       msg = msg.replace(/\x03(\d+)/g, colorise);
       msg = msg.replace(/\x03/g, "</span>");
       msg = msg.replace(/\x02/g, "<span style='font-weight: bold;'>");
