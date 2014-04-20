@@ -12,7 +12,7 @@ Watch a live demo at <https://www.ircgateway.com>
 
 ## Client requirements: ##
 
-- Web Browser with CSS3 and WebSocket support
+- Web Browser with CSS3 and WebSocket support (Firefox, Chromium etc)
 
 
 ## Installation: ##
@@ -27,5 +27,5 @@ please add the following to your virtual host configuration,
 to prevent sessions from expiring: `RequestReadTimeout Body=0,minRate=2`
 
 
-Copyright(c) 2013, Daniel Gruno.
+Copyright(c) 2014, Daniel Gruno.
 Licensed under the Apache License, version 2.0.
