@@ -175,15 +175,15 @@ function setUserFlags(chan, name, flags) {
         var minus = flags.match(/-([a-zA-Z]+)/);
         if (minus) {
           var letters = minus[1];
-          for (l in letters) {
-            user.flags.replace(l, "");
+          for (var l in letters) {
+            user.flags = user.flags.replace(letters[l], "");
           }
         }
         var plus = flags.match(/\+([a-zA-Z]+)/);
         if (plus) user.flags += plus[1];
         var cl = 0;
-        if (flags.match(/v/i)) cl = 1;
-        if (flags.match(/o/i)) cl = 2;
+        if (user.flags.match(/v/i)) cl = 1;
+        if (user.flags.match(/o/i)) cl = 2;
         user.class = cl;
       }
     }
@@ -378,11 +378,12 @@ function pushToScreen(chan, type, sender, msg) {
   var now = new Date().format("<kbd>[hh:mm:ss]</kbd>");
   var fmsg = "";
   var colors = new Array('#e90d7f','#8e55e9', '#b30e0e', '#17b339', '#58afb3', '#9d54b3', '#b39775', '#3176b3', '#e90d7f', '#8e55e9', '#b30e0e');
-  chan = (chan ? chan : "@server").toLowerCase();
+  chan = new String(chan ? chan : "@server").toLowerCase();
   var channel = getChannel(chan);
   if (!channel) {
     channel = getChannel("@server");
   }
+  channel.ping = 1;
   
   // Color nick names
   if (sender) {
@@ -394,13 +395,13 @@ function pushToScreen(chan, type, sender, msg) {
   }
   
   // Actions
-  if (msg.match(/^\x01?ACTION/)) {
+  if (msg && msg.match(/^\x01?ACTION/)) {
       type = "ACTION";
       msg = msg.replace(/^\x01?ACTION\s/, "");
   }
   
   // Colorise messages
-  if (msg) {
+  if (msg != null) {
       msg = msg.replace(/</g, "&lt;");
       msg = msg.replace(/>/g, "&gt;");
       msg = msg.replace(/(([a-z]+):\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&amp;:/~\+#]*[\w\-\@?^=%&amp;/~\+#])?)/g, toURL);
@@ -441,6 +442,9 @@ function pushToScreen(chan, type, sender, msg) {
   }
   else if (type == "PRIVMSG") {
       fmsg = '<div style="width: 85px; float: left;">'+now+'</div><div style=" float: left;width: 150px; text-align: right; padding-right: 5px;">'+sender+'</div><div style="width: calc(100% - 250px);float: left;"><kbd><span style="color: red;">' + msg + '</span></kbd></div>';
+  }
+  else if (type == "DIVIDER") {
+    fmsg = '<hr color="red" noshade/>';
   }
   fmsg = '<div style="float: left; clear: both; width: 100%;">' + fmsg + "</div>\n";
   
@@ -519,8 +523,13 @@ function onMessage(evt) {
         channel = addChannel(chan);
         pushToScreen(chan, 'JOIN', null, chan);
       }
+      if (channel.ping == 0) {
+        if (chan.toLowerCase() != currentChannel) {
+          pushToScreen(chan, 'DIVIDER');
+        }
+        channel.ping = 1;
+      }
       pushToScreen(chan, 'CHANMSG', sender, text);
-      if (channel.ping == 0) channel.ping = 1;
       if (new RegExp("\\b" + username + "\\b", "g").test(text)) channel.ping = 2;
       updateView(true);
   }
@@ -536,8 +545,14 @@ function onMessage(evt) {
       if (!channel) {
           channel = addChannel(sender);
       }
+      if (channel.ping == 0) {
+        if (sender != currentChannel) {
+          pushToScreen(chan, 'DIVIDER');
+        }
+        channel.ping = 1;
+      }
       pushToScreen(sender, 'CHANMSG', sender, text);
-      if (channel.ping == 0) channel.ping = 1;
+      
       if (new RegExp("\\b" + username + "\\b", "g").test(text)) channel.ping = 2;
       updateView(true);
   }
@@ -698,6 +713,18 @@ function onMessage(evt) {
       if (code == '432') {
           params = params.replace(/^\s*\S+ :/, "");
           pushToScreen(null, 'NOTICE', null, "Erroneous nickname used! Please use /nick [newnickname] to change to a different nick.");
+      }
+       if (code == '473') {
+          params = params.replace(/^\s*\S+ :/, "");
+          var ulist = params.match(/(#\S+) :?(.+)$/);
+          var chan = ulist[1];
+          var channel = getChannel(chan);
+          if (channel) {
+            channel.active = false;
+          }
+          pushToScreen(currentChannel, 'NOTICE', null, params);
+          pushToScreen("@server", 'NOTICE', null, params);
+          updateView();
       }
       if (code == '353') {
           var ulist = params.match(/(#\S+) :?(.+)$/);
@@ -918,3 +945,11 @@ function keyHandler(obj,e) {
     
 addChannel("@server");
 //updateView();
+
+
+function clickSubmit(form) {
+  connectToIRC(form);
+  document.getElementById('light').style.display='none';
+  document.getElementById('fade').style.display='none';
+  return false;
+}

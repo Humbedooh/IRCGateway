@@ -41,7 +41,7 @@ For the sake of not abusing this service, your IP and nickname is logged (and no
 
     <div id="fade" class="black_overlay"></div>
     <div id="light" class="white_content">
-        <form>
+        <form onsubmit="return clickSubmit(this);">
             <h3>Welcome to IRCGateway.com!</h3>
             <p>This is merely a test of the WebSocket features in the Apache HTTP Server, but you are free to use it for chatting on IRC.</p>
             <kbd id="emsg"></kbd>
